@@ -1,0 +1,61 @@
+%function Cycles_compare(project1, project2)
+
+close all; clear all; clc;
+fsize = 32;
+project1 = 'Lebanon';
+project2 = 'LebanonVB';
+
+% Season output
+filename = sprintf ('%s/season.dat', project1);
+fid = fopen (filename);
+data = textscan (fid, '%s %s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f', 'headerlines', 2, 'delimiter', '\t');
+fclose(fid);
+timestamp = data{1};
+
+ytitle = 
+x = zeros(size(data{3}, 1), 8);
+x(:, 1) =  datenum (timestamp, 'yyyy-mm-dd');
+x(:, 2) = data{3};
+x(:, 3) = data{5};
+x(:, 4) = data{8};
+x(:, 5) = data{9};
+x(:, 6) = data{16};
+x(:, 7) = data{3} ./ data{10};
+x(:, 8) = data{14} ./ data{5};
+% biomass1 = data{3};
+% yield1 = data{5};
+% harvest_index1 = data{8};
+% pet = data{9};
+% n_stress = data{16};
+% wue = biomass1 ./ data{10};
+% n_conc = data{14} ./ yield1;
+
+
+filename = sprintf ('%s/season.dat', project2);
+fid = fopen (filename);
+data = textscan (fid, '%s %s %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f', 'headerlines', 2, 'delimiter', '\t');
+fclose(fid);
+timestamp = data{1};
+
+y = zeros(size(data{3}, 1), 8);
+y(:, 1) =  datenum (timestamp, 'yyyy-mm-dd');
+y(:, 2) = data{3};
+y(:, 3) = data{5};
+y(:, 4) = data{8};
+y(:, 5) = data{9};
+y(:, 6) = data{16};
+y(:, 7) = data{3} ./ data{10};
+y(:, 8) = data{14} ./ data{5};
+
+for var = 1:7    
+    figure ('Position', [1 1 1600 1200]);
+    plot (x(:, 1), x(:, var + 1), 'o-', y(:, 1), y(:, var + 1), 'o-', 'LineWidth', 2);
+    set (gca, 'FontSize', fsize - 5);
+    datetick('x','mm/dd/yy','keepticks','keeplimits');
+    plotTickLatex2D('ylabeldx',0,'xlabeldy',0.00);
+    xlabel ('Time', 'FontSize', fsize, 'FontWeight', 'Bold', 'interpreter', 'latex');
+    ylabel ('Total Biomass (Mg ha$^{-1}$)', 'FontSize', fsize, 'interpreter', 'latex');
+    lh = legend (project1, project2);
+    set (lh, 'Interpreter', 'latex');
+end
+
